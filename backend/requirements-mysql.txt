@@ -1,0 +1,3 @@
+# Producción con MySQL 8 (necesita compilador y libmysqlclient-dev en Linux)
+-r requirements.txt
+mysqlclient>=2.2,<3

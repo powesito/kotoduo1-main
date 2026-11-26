@@ -1,0 +1,710 @@
+:root {
+  --tinta: #1b2440;
+  --papel: #f4f6fa;
+  --sup: #fff;
+  --hilo: #2b55d6;
+  --linea: #d3d9e6;
+  --suave: #586181;
+  --ok: #1f7a4d;
+  --mal: #b3261e;
+  --rad: 10px;
+  --aviso: #8a5a00;
+  --aviso-fondo: #fff3d6;
+  --boton: #1b2440;
+  --boton-texto: #fff;
+  --acento: #2b55d6;
+  --ok-fondo: var(--ok-fondo);
+  --mal-fondo: var(--mal-fondo);
+  --mal-borde: var(--mal-borde);
+  color-scheme: light;
+}
+/* Tema oscuro: se activa con el botón de la barra (o según el sistema la primera vez; ver public/tema.js). */
+:root[data-tema="oscuro"] {
+  --tinta: #e8ecf8;
+  --papel: #0e1322;
+  --sup: #171e34;
+  --hilo: #5b84ff;
+  --linea: #2d3659;
+  --suave: #9ba6c9;
+  --ok: #62d69f;
+  --mal: #ff8f86;
+  --aviso: #f5c26b;
+  --aviso-fondo: #3a2e10;
+  --boton: #e8ecf8;
+  --boton-texto: #0e1322;
+  --acento: #93b0ff;
+  --ok-fondo: #12352a;
+  --mal-fondo: #3d1c1c;
+  --mal-borde: #703030;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font:
+    16px/1.5 "Schibsted Grotesk",
+    system-ui,
+    sans-serif;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0.2em 0 0.5em;
+}
+h2 {
+  font-size: 1.25rem;
+}
+h3 {
+  font-size: 1.05rem;
+  margin-top: 1.4em;
+}
+small {
+  color: var(--suave);
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: var(--boton);
+  color: var(--boton-texto);
+  border: 0;
+  border-radius: var(--rad);
+  padding: 0.55em 1em;
+  cursor: pointer;
+  font-weight: 500;
+}
+button.sec {
+  background: transparent;
+  color: var(--tinta);
+  border: 1px solid var(--linea);
+}
+input,
+select,
+textarea {
+  width: 100%;
+  background: var(--sup);
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  padding: 0.5em 0.65em;
+}
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+:focus-visible {
+  outline: 3px solid var(--hilo);
+  outline-offset: 2px;
+}
+.cargando,
+.vacio {
+  padding: 2rem;
+  color: var(--suave);
+}
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  background: var(--sup);
+  border-bottom: 1px solid var(--linea);
+  padding: 0.6rem 1.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.marca {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.barra nav {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+.tab {
+  background: none;
+  color: var(--suave);
+  padding: 0.4em 0.8em;
+}
+.tab.activa {
+  color: var(--tinta);
+  box-shadow: inset 0 -3px var(--hilo);
+  border-radius: 0;
+}
+.marca {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+.logo-oscuro,
+:root[data-tema="oscuro"] .logo-claro {
+  display: none;
+}
+:root[data-tema="oscuro"] .logo-oscuro {
+  display: block;
+}
+.login h1 .logo {
+  height: 64px;
+  margin: 0 auto;
+}
+.login-tema {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+.sesion {
+  font-size: 0.9rem;
+}
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+.dos {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+aside {
+  position: sticky;
+  top: 4.5rem;
+}
+.panel {
+  background: var(--sup);
+  border: 1px solid var(--linea);
+  border-radius: var(--rad);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.ancho {
+  grid-column: 1/-1;
+}
+.fila-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+.lista,
+.hist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.fila {
+  width: 100%;
+  text-align: left;
+  background: var(--sup);
+  color: inherit;
+  border: 1px solid var(--linea);
+  display: grid;
+  grid-template-columns: 5rem 1.4fr 1.2fr 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  font-weight: 400;
+}
+.fila.sel {
+  border-color: var(--hilo);
+  box-shadow: 0 0 0 2px var(--hilo);
+}
+.cod {
+  font-weight: 700;
+  color: var(--hilo);
+}
+.hilo {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.hilo li {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.hilo li::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 50%;
+  width: 100%;
+  border-top: 2px dashed var(--linea);
+}
+.hilo li:first-child::before {
+  display: none;
+}
+.hilo li.hecho::before,
+.hilo li.actual::before {
+  border-top: 2px solid var(--hilo);
+}
+.punto {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--sup);
+  border: 2px solid var(--linea);
+  position: relative;
+  z-index: 1;
+}
+.hecho .punto {
+  background: var(--hilo);
+  border-color: var(--hilo);
+}
+.actual .punto {
+  background: var(--sup);
+  border-color: var(--hilo);
+  box-shadow: 0 0 0 3px #2b55d633;
+}
+.etapa {
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 0.25rem;
+  color: var(--suave);
+}
+.actual .etapa {
+  color: var(--tinta);
+  font-weight: 700;
+}
+.hilo.largo {
+  margin: 1rem 0 1.25rem;
+}
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 1rem;
+  margin: 0 0 1rem;
+}
+dt {
+  color: var(--suave);
+}
+dd {
+  margin: 0;
+}
+.hist li {
+  display: grid;
+  border-left: 3px solid var(--linea);
+  padding-left: 0.75rem;
+}
+.msg {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+.msg.error {
+  background: var(--mal-fondo);
+  color: var(--mal);
+}
+.msg.ok {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+.material {
+  background: var(--sup);
+  border: 1px solid var(--linea);
+  border-radius: var(--rad);
+  padding: 0.8rem 1rem;
+  display: grid;
+  grid-template-columns: 1.3fr 0.8fr 2.4fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+.material.bajo {
+  border-left: 5px solid var(--mal);
+}
+.cant small {
+  display: block;
+}
+.chip {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05em 0.6em;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.chip.alerta {
+  background: var(--mal-fondo);
+  color: var(--mal);
+}
+.chip.bien {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+.login {
+  max-width: 360px;
+  margin: 12vh auto;
+  padding: 2rem;
+  background: var(--sup);
+  border: 1px solid var(--linea);
+  border-radius: var(--rad);
+  display: grid;
+  gap: 1rem;
+}
+.login h1 {
+  font-size: 2.4rem;
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+.login p {
+  margin: 0;
+  color: var(--suave);
+}
+.hilo li.tramo::before {
+  border-top: 2px solid var(--hilo);
+}
+.hilo li.con .punto {
+  background: var(--hilo);
+  border-color: var(--hilo);
+  box-shadow: 0 0 0 3px #2b55d633;
+}
+.hilo li.con .etapa {
+  color: var(--tinta);
+  font-weight: 700;
+}
+.cuenta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--acento);
+  min-height: 1.2em;
+  line-height: 1.4;
+}
+.ayuda {
+  font-size: 0.8rem;
+  color: var(--suave);
+  font-weight: 400;
+}
+.resumen {
+  margin: 0.25rem 0 0;
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+.etapas {
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  padding: 0.6rem 0.8rem;
+  margin: 0;
+}
+.etapas legend {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0 0.3rem;
+}
+.etapas .ayuda {
+  flex-basis: 100%;
+}
+.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+.check input {
+  width: auto;
+}
+.acciones {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.acciones button {
+  padding: 0.4em 0.8em;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.inactiva {
+  opacity: 0.65;
+}
+
+/* ---- filtros, resumen y chips de plazo ---- */
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.filtros input[type="search"] {
+  grid-column: 1/-1;
+}
+.historial-filtros {
+  grid-template-columns: 2fr 1fr;
+}
+.historial-filtros input[type="search"] {
+  grid-column: auto;
+}
+.resumen-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.resumen-barra b {
+  margin-left: 0.35rem;
+}
+button.sec.activa {
+  background: var(--boton);
+  color: var(--boton-texto);
+  border-color: var(--boton);
+}
+button.mal {
+  color: var(--mal);
+  border-color: var(--mal-borde);
+}
+.resumen-barra .mal b {
+  color: var(--mal);
+}
+.resumen-barra .mal.activa {
+  background: var(--mal);
+  border-color: var(--mal);
+}
+.resumen-barra .mal.activa b {
+  color: var(--sup);
+}
+.chip.aviso {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
+.chip.plazo {
+  margin-left: 0;
+  margin-top: 0.2rem;
+}
+h2 .chip.plazo {
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.msg.aviso {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
+.mas {
+  width: 100%;
+  margin: 0.75rem 0;
+}
+.volver {
+  display: none;
+  margin-bottom: 0.75rem;
+}
+.estrecha {
+  max-width: 520px;
+}
+.fila-completa {
+  grid-column: 1/-1;
+}
+.plegable {
+  border-top: 1px solid var(--linea);
+  margin-top: 1rem;
+  padding-top: 0.6rem;
+}
+.plegable summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.plegable form {
+  margin-top: 0.75rem;
+}
+.mov {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.4rem;
+}
+.material.usuario {
+  grid-template-columns: 1.2fr 1.6fr 1.4fr;
+}
+.material .hist {
+  margin-top: 0.25rem;
+}
+
+/* ---- móvil: la lista y el detalle se alternan en vez de apilarse ---- */
+@media (max-width: 860px) {
+  .dos {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    position: static;
+  }
+  .dos.con-sel > section {
+    display: none;
+  }
+  .dos:not(.con-sel) > aside {
+    display: none;
+  }
+  .volver {
+    display: inline-flex;
+  }
+  .fila {
+    grid-template-columns: 4.5rem 1fr;
+  }
+  .fila .hilo,
+  .fila .area {
+    grid-column: 1/-1;
+  }
+  .material,
+  .material.usuario {
+    grid-template-columns: 1fr;
+  }
+  .barra nav {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+  .check input {
+    min-height: 0;
+    width: 20px;
+    height: 20px;
+  }
+  .acciones button {
+    padding: 0.6em 1em;
+  }
+  main {
+    padding: 0.9rem;
+  }
+}
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .historial-filtros {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .logo {
+    height: 32px;
+  }
+  .marca {
+    margin-right: auto;
+  }
+  .tema-txt {
+    display: none;
+  }
+}
+
+.asignado {
+  color: var(--acento);
+  font-weight: 700;
+}
+.hist .acciones {
+  margin-top: 0.3rem;
+}
+.hist .fila-form {
+  margin-top: 0.4rem;
+}
+.hist .msg {
+  margin: 0.3rem 0;
+}
+
+/* ---- etapa actual (lo primero que ve el trabajador) ---- */
+.etapa-actual {
+  display: grid;
+  gap: 0.3rem;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-left: 6px solid var(--hilo);
+  border-radius: var(--rad);
+  padding: 0.8rem 1rem;
+  margin: 0.75rem 0;
+}
+.etapa-actual > small {
+  color: var(--suave);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.etapa-actual .etapa-nombre {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--acento);
+}
+.etapa-actual .unidades {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.etapa-actual .otras {
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+.etapa-actual progress {
+  width: 100%;
+  height: 10px;
+  accent-color: var(--ok);
+}
+.etapa-actual.final {
+  border-left-color: var(--ok);
+}
+.etapa-actual.final .etapa-nombre {
+  color: var(--ok);
+}
+.meta {
+  margin: 0.25rem 0 0.75rem;
+  color: var(--suave);
+}
+.busqueda {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.busqueda input {
+  flex: 1;
+  min-width: 0;
+}
+.mas-filtros {
+  margin: 0 0 0.5rem;
+  padding-top: 0.4rem;
+  border-top: none;
+}
+.mas-filtros .filtros {
+  margin: 0.6rem 0 0;
+}
+.actualizado {
+  margin: 0.25rem 0 0.75rem;
+}
+.actualizado button {
+  padding: 0.2em 0.7em;
+  font-size: 0.85rem;
+}
+.chip.etapa-lista {
+  margin-left: 0;
+  margin-top: 0.25rem;
+  background: var(--papel);
+  color: var(--acento);
+}

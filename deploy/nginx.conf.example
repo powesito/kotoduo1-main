@@ -1,0 +1,44 @@
+# /etc/nginx/sites-available/kotoduo  — ejemplo; ajusta dominio y rutas. Certificado: `sudo certbot --nginx`.
+server {
+    listen 80;
+    server_name kotoduo.tudominio.cl;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name kotoduo.tudominio.cl;
+    # ssl_certificate / ssl_certificate_key: los agrega certbot
+
+    # Frontend compilado (`cd frontend && npm ci && npm run build`)
+    root /srv/kotoduo/frontend/dist;
+    index index.html;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy same-origin always;
+    # La tipografía va incluida en la app (sin servicios externos), así que todo es 'self'.
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data:; frame-ancestors 'none'" always;
+
+    location = /health {
+        proxy_pass http://127.0.0.1:8000/api/salud/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        access_log off;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  # Django cuenta 1 proxy (NUM_PROXIES=1)
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+}

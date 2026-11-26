@@ -1,0 +1,22 @@
+# /etc/systemd/system/kotoduo.service
+# Activar: sudo systemctl daemon-reload && sudo systemctl enable --now kotoduo
+[Unit]
+Description=Kotoduo (gunicorn)
+After=network.target mysql.service
+
+[Service]
+User=kotoduo
+Group=kotoduo
+WorkingDirectory=/srv/kotoduo/backend
+EnvironmentFile=/etc/kotoduo.env
+ExecStart=/srv/kotoduo/backend/.venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 3 --timeout 30 --max-requests 1000 --max-requests-jitter 100 --access-logfile -
+Restart=on-failure
+# Endurecimiento: el servicio no puede escribir fuera de su caché ni ganar privilegios.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/cache/kotoduo
+
+[Install]
+WantedBy=multi-user.target

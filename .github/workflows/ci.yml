@@ -1,0 +1,61 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    env: { DEBUG: "1" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check .
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py test core
+      - name: Configuración de producción (cualquier aviso falla)
+        env:
+          DEBUG: "0"
+          SECRET_KEY: ci-clave-larga-solo-para-comprobar-0123456789-abcdefghijklmnopqrstuvwxyz
+          ALLOWED_HOSTS: ejemplo.cl
+          HSTS_SECONDS: "31536000"
+        run: python manage.py check --deploy --fail-level WARNING
+
+  backend-mysql:
+    # SQLite no se comporta igual que MySQL con restricciones y bloqueos de fila: se prueba contra MySQL 8.
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    services:
+      mysql:
+        image: mysql:8
+        env: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: kotoduo }
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DEBUG: "1"
+      DB_NAME: kotoduo
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_HOST: 127.0.0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: sudo apt-get update && sudo apt-get install -y libmysqlclient-dev pkg-config
+      - run: pip install -r requirements-mysql.txt
+      - run: python manage.py test core
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=high
